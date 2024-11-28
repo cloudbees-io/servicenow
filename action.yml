@@ -1,0 +1,108 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: action
+name: "Servicenow Actions"
+inputs:
+  action-type:
+    description: 'Identifies the functionality Create/Update/Get'
+    required: true
+  url:
+    description: 'servicenow host url'
+    required: true
+  username:
+    description: 'servicenow username'
+    required: true
+  password:
+    description: 'servicenow password'
+    required: true
+  client-id:
+    description: 'servicenow client id'
+    default: ''
+  client-secret:
+    description: 'servicenow client secret'
+    default: ''
+  cr-number: 
+    description: 'unique CR number auto generated during creation. mandatory for Get'
+    default: ''
+  requested-by:
+    description: 'requested by user'
+    default: ''
+  category:
+    description: 'category of the CR'
+    default: ''
+  short-description:
+    description: 'short description of the CR'
+    default: ''
+  description: 
+    description: 'description of the CR'
+    default: ''
+  cr-type:
+    description: 'type of the CR (Normal/Emergency - default to Normal)'
+    default: ''
+  state:
+    description: 'state of the CR (New/Assess/Authorize/Scheduled/Implement/Review/Closed/Canceled - defaults to New for create)'
+    default: ''
+  assignment-group:
+    description: 'assignment group for the CR'
+    default: ''
+  assigned-to:
+    description: 'assigned to user'
+    default: ''
+  priority:
+    description: 'priority of the CR'
+    default: ''
+  risk:
+    description: 'risk of the CR'
+    default: ''
+  impact:
+    description: 'impact of the CR'
+    default: ''
+  sys-id:
+    description: 'system id of the CR. mandatory for update'
+    default: ''
+  additional-parameters:
+    description: 'Additional parameters any othe optional parameterers provided as name value pair in json string'
+    default: '{}'
+
+
+runs:
+  using: composite
+  steps:
+    - id: invoke-servicenow-action
+      name: invoke-servicenow-action
+      uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/servicenow-actions:validation-af363bf9ab17e96375b861579ba934d74b33cb6b
+      shell: sh
+      env: 
+        RUN_ID: ${{ cloudbees.run_id }}
+        JOB_ID: ${{ job.id }}
+        STEP_ID: ${{ step.internal.id }}
+        DNS_URL: ${{ cloudbees.api.url }}
+        JWT_TOKEN: ${{ cloudbees.api.token }}
+      run: |
+        set -x
+        cd /app
+        
+        ./servicenow -i '{
+          "action_type": "${{ inputs.action-type }}",
+          "url": "${{ inputs.url }}",
+          "username": "${{ inputs.username }}",
+          "password": "${{ inputs.password }}",
+          "client_id": "${{ inputs.client-id }}",
+          "client_secret": "${{ inputs.client-secret }}",
+          "params": {
+            "number": "${{ inputs.cr-number }}",
+            "requested_by": "${{ inputs.requested-by }}",
+            "category": "${{ inputs.category }}",
+            "short_description": "${{ inputs.short-description }}",
+            "description": "${{ inputs.description }}",
+            "type": "${{ inputs.cr-type }}",
+            "state": "${{ inputs.state }}", 
+            "assignment_group": "${{ inputs.assignment-group }}",
+            "assigned_to": "${{ inputs.assigned-to }}",
+            "priority": "${{ inputs.priority }}",
+            "risk": "${{ inputs.risk }}",
+            "impact": "${{ inputs.impact }}",
+            "sys_id": "${{ inputs.sys-id }}"
+            },
+            "additional_parameters": ${{ inputs.additional-parameters }}
+          }'
+          

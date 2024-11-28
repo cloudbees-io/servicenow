@@ -1,0 +1,147 @@
+= CloudBees action: Servicenow Actions
+
+Use this action to create/update/get-state of CR ticket on servicenow application.
+
+== Inputs
+
+[cols="2a,1a,1a,3a",options="header"]
+.Input details
+|===
+
+| Input name
+| Data type
+| Required
+| Description
+
+| `action-type`
+| String
+| Yes
+| Identifies the functionality Create/Update/Get.
+
+| `url`
+| String
+| Yes
+| Servicenow host url.
+
+| `username`
+| String
+| Yes
+| Required for BasicAuth & OAuth.
+
+| `password`
+| String
+| Yes
+| Required for BasicAuth & OAuth.
+
+| `client-id`
+| String
+| Yes
+| Required for OAuth.
+
+| `client-secret`
+| String
+| Yes
+| Required for OAuth.
+
+| `cr-number`
+| String
+| Yes
+| Required when action-type is get.
+
+| `sys-id`
+| String
+| Yes
+| Required when action-type is update.
+
+| `short-description`
+| String
+| No
+| Short description of the CR ticket (title of the ticket).
+
+| `description:`
+| String
+| No
+| Discription of the CR ticket.
+
+| `cr-type`
+| String
+| No
+| Type of the CR (Normal/Emergency - by default Normal).
+
+| `state`
+| String
+| No
+| State of the CR ticket (New/Assess/Authorize/Scheduled/Implement/Review/Closed/Canceled - defaults is New when create).
+
+| `priority`
+| String
+| No
+| Priority of the CR ticket.
+
+| `risk`
+| String
+| No
+| Risk involved in the CR ticket.
+
+| `impact`
+| String
+| No
+| Impact of the CR ticket.
+
+| `category`
+| String
+| No
+| Category of the CR ticket.
+
+| `requested-by`
+| String
+| No
+| User how request for the CR ticket.
+
+| `assignment-group`
+| String
+| No
+| Assignment group to which the CR ticket should be assigned to.
+
+| `assigned-to`
+| String
+| No
+| Assigned to whom the CR ticket should be assigned to in provided assignment group.
+
+| `additional-parameters`
+| Json String
+| No
+| Any aditional parameters apart form the list provided above.
+
+|===
+
+== Usage example
+
+In your YAML file, To update CR ticket add:
+
+[source,yaml]
+----
+    - name: Servicenow Action with OAuth
+      uses: cloudbees-io/service-now@v1
+      with:
+        url: ${{ vars.SERVICENOW_URL }}
+        username: "username"
+        password: "password"
+        client-id: "client-id"
+        client-secret: "client-secret"
+        action-type: "create|update|get"
+        cr-type: "Normal|Emergency"
+        short-description: "Title of the CR ticket"
+        cr-number: "CR ticket number"
+        sys-id: "unique id for CR ticket"
+----
+
+== License
+
+This code is made available under the 
+link:https://opensource.org/license/mit/[MIT license].
+
+== References
+
+* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
+* Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
