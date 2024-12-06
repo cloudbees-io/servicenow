@@ -37,7 +37,7 @@ inputs:
     default: ''
   cr-type:
     description: 'type of the CR (Normal/Emergency - default to Normal)'
-    default: ''
+    default: 'Normal'
   state:
     description: 'state of the CR (New/Assess/Authorize/Scheduled/Implement/Review/Closed/Canceled - defaults to New for create)'
     default: ''
@@ -69,7 +69,7 @@ runs:
   steps:
     - id: invoke-servicenow-action
       name: invoke-servicenow-action
-      uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/servicenow-actions:validation-af363bf9ab17e96375b861579ba934d74b33cb6b
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-253df8ccfd99a474ea6875559c6a16e9a37c04b8
       shell: sh
       env: 
         RUN_ID: ${{ cloudbees.run_id }}
@@ -105,4 +105,3 @@ runs:
             },
             "additional_parameters": ${{ inputs.additional-parameters }}
           }'
-          
