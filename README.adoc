@@ -122,7 +122,7 @@ In your YAML file, To update CR ticket add:
 [source,yaml]
 ----
     - name: Servicenow Action with OAuth
-      uses: cloudbees-io/service-now@v1
+      uses: cloudbees-io/servicenow@v1
       with:
         url: ${{ vars.SERVICENOW_URL }}
         username: "username"
