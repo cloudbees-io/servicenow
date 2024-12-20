@@ -70,7 +70,7 @@ inputs:
     default: '{}'
 
 outputs:
-  servicenow_output:
+  servicenow-output:
     value: ${{ steps.invoke-servicenow-action.outputs.servicenow_output_var }}
     description: servicenow env variable output
     
