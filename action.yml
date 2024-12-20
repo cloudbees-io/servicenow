@@ -59,11 +59,21 @@ inputs:
   sys-id:
     description: 'system id of the CR. mandatory for update'
     default: ''
+  close-code:
+    description: 'close code for closing the CR (Successful/Successful with issue/Unsuccessful/ other customized code)'
+    default: ''
+  close-notes:
+    description: 'close notes for closing the CR'
+    default: ''
   additional-parameters:
     description: 'Additional parameters any othe optional parameterers provided as name value pair in json string'
     default: '{}'
 
-
+outputs:
+  servicenow-output:
+    value: ${{ steps.invoke-servicenow-action.outputs.servicenow_output_var }}
+    description: servicenow env variable output
+    
 runs:
   using: composite
   steps:
