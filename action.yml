@@ -63,7 +63,11 @@ inputs:
     description: 'Additional parameters any othe optional parameterers provided as name value pair in json string'
     default: '{}'
 
-
+outputs:
+  servicenow_output:
+    value: ${{ steps.invoke-servicenow-action.outputs.servicenow_output_var }}
+    description: servicenow env variable output
+    
 runs:
   using: composite
   steps:
