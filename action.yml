@@ -111,7 +111,9 @@ runs:
             "priority": "${{ inputs.priority }}",
             "risk": "${{ inputs.risk }}",
             "impact": "${{ inputs.impact }}",
-            "sys_id": "${{ inputs.sys-id }}"
+            "sys_id": "${{ inputs.sys-id }}",
+            "close_code": "${{ inputs.close-code }}",
+            "close_notes": "${{ inputs.close-notes }}"
             },
             "additional_parameters": ${{ inputs.additional-parameters }}
           }'
