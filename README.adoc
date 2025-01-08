@@ -120,7 +120,7 @@ The default value is "normal".
 | `requested-by`
 | String
 | No
-| The type of change request initiated by the user.
+| The user that requested the change.
 
 | `assignment-group`
 | String
@@ -299,7 +299,7 @@ The default value is "normal".
 | `requested-by`
 | String
 | No
-| The type of change request initiated by the user.
+| The user that requested the change.
 
 | `assignment-group`
 | String
