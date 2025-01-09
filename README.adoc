@@ -1,139 +1,447 @@
-= CloudBees action: Servicenow Actions
+= CloudBees action: ServiceNow operations
 
-Use this action to create/update/get-state of CR ticket on servicenow application.
+Use this action to perform the following ServiceNow operations using the CloudBees platform: 
 
-== Inputs
+* xref:README.adoc#create-a-change-request[Create a change request].
+* xref:README.adoc#update-or-close-a-change-request[Update or close a change request].
+* xref:README.adoc#get-the-current-state-of-a-change-request[Get the current state of a change request].
 
-[cols="2a,1a,1a,3a",options="header"]
+== Authentication methods
+
+The ServiceNow action supports both basic and OAuth authentication methods to connect with ServiceNow.
+
+* *Basic authentication*: Provide a ServiceNow URL, a valid username, and a password to connect to the ServiceNow application.
+* *OAuth authentication*: In addition to a ServiceNow URL, a valid username, and a password, provide a *ClientId* and *Client Secret*, for generating a bearer access token with an expiration date.
+This method is more secure.
+
+== Supported versions
+
+CloudBees has tested and supports the following ServiceNow releases:
+
+* link:https://www.servicenow.com/docs/bundle/xanadu-release-notes/page/release-notes/family-release-notes.html[Xanadu]
+* link:https://www.servicenow.com/docs/bundle/washingtondc-release-notes/page/release-notes/family-release-notes.html[Washington DC]
+* link:https://www.servicenow.com/docs/bundle/vancouver-release-notes/page/release-notes/family-release-notes.html[Vancouver]
+
+Other versions of ServiceNow may work with the CloudBees platform.
+If you are using a version of ServiceNow not listed above, submit a feature request with link:https://support.cloudbees.com[CloudBees Support].
+
+== Create a change request
+
+Use this functionality to create a new change request in ServiceNow.
+The user must provide:
+
+* xref:README.adoc#authentication-methods[Valid credentials] and the ServiceNow host URL.
+* The *create* action type.
+
+=== Inputs
+
+Inputs for the create change request functionality are listed below.
+
+[cols="3a,2a,3a,5a",options="header"]
 .Input details
 |===
 
-| Input name
+| Change request model field
 | Data type
-| Required
+| Required?
 | Description
 
 | `action-type`
 | String
 | Yes
-| Identifies the functionality Create/Update/Get.
+| The type of operation is "create".
 
 | `url`
 | String
 | Yes
-| Servicenow host url.
+| The ServiceNow host URL.
 
 | `username`
 | String
 | Yes
-| Required for BasicAuth & OAuth.
+| The username for authentication.
 
 | `password`
 | String
 | Yes
-| Required for BasicAuth & OAuth.
+| The password for authentication.
 
 | `client-id`
 | String
-| Yes
-| Required for OAuth.
+| Required only for OAuth-based authentication.
+| The unique identification number of the client.
 
 | `client-secret`
 | String
-| Yes
-| Required for OAuth.
-
-| `cr-number`
-| String
-| Yes
-| Required when action-type is get.
-
-| `sys-id`
-| String
-| Yes
-| Required when action-type is update.
+| Required only for OAuth-based authentication.
+| The client secret for authentication.
 
 | `short-description`
 | String
 | No
-| Short description of the CR ticket (title of the ticket).
+| A short title for easy identification.
 
 | `description:`
 | String
 | No
-| Discription of the CR ticket.
+| Additional information about the change request ticket.
 
 | `cr-type`
 | String
 | No
-| Type of the CR (Normal/Emergency - by default Normal).
+| The type of change request.
+The default value is "normal".
 
 | `state`
 | String
 | No
-| State of the CR ticket (New/Assess/Authorize/Scheduled/Implement/Review/Closed/Canceled - defaults is New when create).
+| The current status of the change request.
 
 | `priority`
 | String
 | No
-| Priority of the CR ticket.
+| The priority of the change request.
 
 | `risk`
 | String
 | No
-| Risk involved in the CR ticket.
+| The risk involved in the change request.
 
 | `impact`
 | String
 | No
-| Impact of the CR ticket.
+| The impact of the change request.
 
 | `category`
 | String
 | No
-| Category of the CR ticket.
+| The change request ticket category.
 
 | `requested-by`
 | String
 | No
-| User how request for the CR ticket.
+| The user that requested the change.
 
 | `assignment-group`
 | String
 | No
-| Assignment group to which the CR ticket should be assigned to.
+| The assignment group to which the change request must be mapped.
 
 | `assigned-to`
 | String
 | No
-| Assigned to whom the CR ticket should be assigned to in provided assignment group.
+| The user to whom the change request ticket must be assigned in the assignment group.
 
 | `additional-parameters`
-| Json String
+| JSON string
 | No
-| Any aditional parameters apart form the list provided above.
+| Any additional parameters apart from the list provided above.
+Refer to link:https://www.servicenow.com/docs/bundle/xanadu-api-reference/page/integrate/inbound-rest/concept/change-management-api.html#title_change-GET-change-sys_id[the ServiceNow documentation] for more information.
 
 |===
 
-== Usage example
+== Unique identifiers generated by ServiceNow
 
-In your YAML file, To update CR ticket add:
+Unique `cr-number` and `sys_id` identifiers are generated by ServiceNow when the ticket is successfully created.
 
-[source,yaml]
+* The `sys_id` is a unique 32-character identifier required to xref:README.adoc#update-or-close-a-change-request[update or close] the ticket.
+* The `cr-number` is required to xref:README.adoc#get-the-current-state-of-a-change-request[get the current state] of a change request and to link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/service-now/poll-for-approval[query a change request for approval].
+
+=== Usage examples: Creating
+
+The following is an example payload for creating a change request using basic authentication:
+
+[source,yaml,role="default-expanded"]
 ----
-    - name: Servicenow Action with OAuth
-      uses: cloudbees-io/servicenow@v1
-      with:
-        url: ${{ vars.SERVICENOW_URL }}
-        username: "username"
-        password: "password"
-        client-id: "client-id"
-        client-secret: "client-secret"
-        action-type: "create|update|get"
-        cr-type: "Normal|Emergency"
-        short-description: "Title of the CR ticket"
-        cr-number: "CR ticket number"
-        sys-id: "unique id for CR ticket"
+
+    steps:
+      - name: Create ServiceNow CR with basic auth
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ secrets.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          action-type: "create"
+          cr-type: "normal"
+          short-description: "Title of the CR ticket"
+
+----
+
+If your workflow uses a link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/workflows/manage-workflows#create-trigger[manual trigger], you can configure input parameters for the ServiceNow change request fields in the format `${{ inputs.MY_PARAMETER }}`, which can then be passed to the action inputs. 
+The following is an example payload for creating a change request using basic authentication and input parameters:
+
+[source,yaml,role="default-expanded"]
+----
+
+    steps:
+      - name: Create ServiceNow CR with manual trigger
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ secrets.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          action-type: create
+          cr-type: Normal
+          short-description: ${{ inputs.Short_Description }}
+          description: ${{ inputs.Description }}
+
+----
+
+== Update or close a change request
+
+Use this functionality to update or close an existing ServiceNow change request.
+The user must provide:
+
+* xref:README.adoc#authentication-methods[Valid credentials] and the ServiceNow host URL.
+* The *update* action type.
+* The unique *sys_id* attribute returned by the change request response.
+
+=== Inputs
+
+Inputs for the change request functionality are listed below.
+
+[cols="3a,2a,4a,5a",options="header"]
+.Input details
+|===
+
+| Change request model field
+| Data type
+| Required
+| Description
+
+| `url`
+| String
+| Yes
+| The ServiceNow host URL.
+
+| `username`
+| String
+| Yes
+| The username for authentication.
+
+| `password`
+| String
+| Yes
+| The password for authentication.
+
+| `client-id`
+| String
+| Required only for OAuth-based authentication.
+| The unique identification number of the client.
+
+| `client-secret`
+| String
+| Required only for OAuth-based authentication.
+| The client secret for authentication.
+
+| `action-type`
+| String
+| Yes
+| The type of operation is "update" for both updating and closing a change request.
+
+| `sys-id`
+| String
+| Yes
+| The identifier auto-generated during xref:README.adoc#unique-identifiers-generated-by-servicenow[change request creation].
+
+| `close-code`
+| String
+| Required for the close operation only if configured as mandatory fields in ServiceNow for closing a ticket.
+| The code assigned to the change request by the user closing it. 
+For example, "successful", "successful with issues", or "unsuccessful".
+
+| `close-notes`
+| String
+| Required for the close operation only if configured as mandatory fields in ServiceNow for closing a ticket.
+| The notes entered by the user closing the change request.
+
+| `short-description`
+| String
+| No
+| A short title for easy identification.
+
+| `description`
+| String
+| No
+| Additional information about the change request ticket.
+
+| `cr-type`
+| String
+| No
+| The type of change request.
+The default value is "normal".
+
+| `state`
+| String
+| No
+| The current status of the change request (matches the ServiceNow configuration).
+
+| `priority`
+| String
+| No
+| The priority of the change request.
+
+| `risk`
+| String
+| No
+| The risk involved in the change request.
+
+| `impact`
+| String
+| No
+| The impact of the change request.
+
+| `category`
+| String
+| No
+| The change request ticket category.
+
+| `requested-by`
+| String
+| No
+| The user that requested the change.
+
+| `assignment-group`
+| String
+| No
+| The assignment group to which the change request must be mapped.
+
+| `assigned-to`
+| String
+| No
+| The user to whom the change request ticket must be assigned in the assignment group.
+
+| `additional-parameters`
+| JSON String
+| No
+| Any additional parameters apart from the list provided above.
+Refer to link:https://www.servicenow.com/docs/bundle/xanadu-api-reference/page/integrate/inbound-rest/concept/change-management-api.html#title_change-GET-change-sys_id[the ServiceNow documentation] for more information.
+
+|===
+
+=== Usage example: Updating
+
+The following is an example payload for updating a change request using basic authentication:
+
+[source,yaml,role="default-expanded"]
+----
+      - name: Update ServiceNow CR with basic auth
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ secrets.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          action-type: "update"
+          sys-id: "the unique system-generated string"
+          description: "Updated description from CBP workflow"
+          priority: "3 - Moderate"
+          risk: "Low"
+          additional-parameters : '{"risk_impact_analysis":"Describe the risks here","implementation_plan": "Describe the implementation plan here"}'
+----
+=== Usage example: Closing
+
+The following is an example payload for closing a change request:
+
+[source,yaml,role="default-expanded"]
+----
+      - name: Close ServiceNow CR with mandatory close fields
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ vars.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          client-id: ${{ secrets.MY_CLIENT_ID }}
+          client-secret: ${{ secrets.MY_CLIENT_SECRET }}
+          action-type: "update"
+          sys-id: "Unique ServiceNow-generated identifier"
+          state: "close"
+          close-code: "successful"
+          close-notes: "Change request closed in successful state"
+
+----
+
+[NOTE]
+====
+For information about using input parameters in a manually triggered workflow, refer to the xref:README.adoc#create-a-change-request[Create change request usage example].
+
+====
+
+== Get the current state of a change request
+
+Use this functionality to get the current state of a ServiceNow change request.
+The user must provide:
+
+* xref:README.adoc#authentication-methods[Valid credentials] and the ServiceNow host URL. 
+* The *get* action type.
+* The *cr-number* auto-generated during change request creation.
+
+== Inputs
+
+Inputs for the get change request functionality are listed below.
+
+[cols="3a,3a,4a,5a",options="header"]
+.Input details
+|===
+
+| Change request model field
+| Data type
+| Required
+| Description
+
+| `url`
+| String
+| Yes
+| The ServiceNow host URL.
+
+| `username`
+| String
+| Yes
+| The username for authentication.
+
+| `password`
+| String
+| Yes
+| The password for authentication.
+
+| `client-id`
+| String
+| Required only for OAuth-based authentication.
+| The unique identification number of the client.
+
+| `client-secret`
+| String
+| Required only for OAuth-based authentication.
+| The client secret for authentication.
+
+| `action-type`
+| String
+| Yes
+| The type of operation is "get".
+
+| `cr-number`
+| String
+| Yes
+| The unique number auto-generated during xref:README.adoc#unique-identifiers-generated-by-servicenow[change request creation].
+
+|===
+
+== Usage example: Getting the current state
+
+The following is an example payload with basic authentication to get the current change request state:
+
+[source,yaml,role="default-expanded"]
+----
+
+    steps:
+      - name: Get ServiceNow CR state with basic auth
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ vars.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          action-type: "get"
+          cr-number: "Unique ServiceNow-generated number"
+
 ----
 
 == License
