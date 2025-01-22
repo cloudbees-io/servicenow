@@ -81,7 +81,7 @@ Inputs for the create change request functionality are listed below.
 | No
 | A short title for easy identification.
 
-| `description:`
+| `long-description`
 | String
 | No
 | Additional information about the change request ticket.

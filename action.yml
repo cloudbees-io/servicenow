@@ -32,7 +32,7 @@ inputs:
   short-description:
     description: 'short description of the CR'
     default: ''
-  description: 
+  long-description: 
     description: 'description of the CR'
     default: ''
   cr-type:
@@ -103,7 +103,7 @@ runs:
             "requested_by": "${{ inputs.requested-by }}",
             "category": "${{ inputs.category }}",
             "short_description": "${{ inputs.short-description }}",
-            "description": "${{ inputs.description }}",
+            "description": "${{ inputs.long-description }}",
             "type": "${{ inputs.cr-type }}",
             "state": "${{ inputs.state }}", 
             "assignment_group": "${{ inputs.assignment-group }}",
