@@ -132,6 +132,22 @@ The default value is "normal".
 | No
 | The user to whom the change request ticket must be assigned in the assignment group.
 
+| `validate-change-freeze-conflict`
+| Boolean
+| No
+| Whether to check the freeze window conflict.
+The default value is false.
+
+| `planned-start-date`
+| String
+| Required if `validate-change-freeze-conflict` is true.
+| The scheduled start date and time of the change request, formatted as `yyyy-mm-dd hh:mm:ss`.
+
+| `planned-end-date`
+| String
+| Required if `validate-change-freeze-conflict` is true.
+| The scheduled end date and time of the change request, formatted as `yyyy-mm-dd hh:mm:ss`.
+
 | `additional-parameters`
 | JSON string
 | No
@@ -186,6 +202,41 @@ The following is an example payload for creating a change request using basic au
           description: ${{ inputs.Description }}
 
 ----
+
+=== Check for change freezes
+
+If the parameter `validate-change-freeze-conflict` is set to true, the action performs an additional check before creating the change request.
+
+When this parameter is set to true, you must input both planned start and end dates and times.
+The action checks ServiceNow for configuration of a change freeze window during the planned start and end dates provided in the change request.
+
+* If a change freeze exists during the scheduled dates, then the action fails and the change request is not created.
+* If no change freeze conflict is detected, the action then proceeds to create the change request.
+
+The following is an example payload for creating a change request using OAuth-based authentication and checking for any change freezes within the planned change request start and end dates:
+
+[source,yaml,role="default-expanded"]
+----
+
+    steps:
+      - name: Create ServiceNow CR and check for change freeze
+        uses: cloudbees-io/service-now@v1
+        with:
+          url: ${{ vars.SERVICENOW_URL }}
+          username: ${{ vars.MY_SERVICENOW_USERNAME }}
+          password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
+          client-id: ${{ secrets.MY_CLIENT_ID }}
+          client-secret: ${{ secrets.MY_CLIENT_SECRET }}
+          action-type: create
+          cr-type: Normal
+          short-description: 'check for change freeze'
+          validate-change-freeze-conflict: true
+          planned-start-date: "2025-03-06 17:00:00"
+          planned-end-date: "2025-03-06 17:59:59"
+
+----
+
+NOTE: Times specified in `planned-start-date` and `planned-end-date` are evaluated to be in the time zone set in your link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/teams-users/users#user-profile[user profile].
 
 == Update or close a change request
 
@@ -425,7 +476,7 @@ Inputs for the get change request functionality are listed below.
 
 |===
 
-== Usage example: Getting the current state
+=== Usage example: Getting the current state
 
 The following is an example payload with basic authentication to get the current change request state:
 
