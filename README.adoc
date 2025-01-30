@@ -419,7 +419,7 @@ For information about using input parameters in a manually triggered workflow, r
 
 == Get the current state of a change request
 
-Use this functionality to get the current state of a ServiceNow change request.
+Use this functionality to get the current state, including any blackout window conflict status, of a ServiceNow change request.
 The user must provide:
 
 * xref:README.adoc#authentication-methods[Valid credentials] and the ServiceNow host URL. 
