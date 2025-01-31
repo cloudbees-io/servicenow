@@ -20,6 +20,15 @@ inputs:
   client-secret:
     description: 'servicenow client secret'
     default: ''
+  validate-blackout-window-conflict:
+    description: 'set true to check the blackout window conflict.'
+    default: false
+  planned-start-date:
+    description: 'schedule start date'
+    default: ''
+  planned-end-date:
+    description: 'schedule end date'
+    default: ''
   cr-number: 
     description: 'unique CR number auto generated during creation. mandatory for Get'
     default: ''
@@ -79,7 +88,7 @@ runs:
   steps:
     - id: invoke-servicenow-action
       name: invoke-servicenow-action
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-c334fa83cd0a3c9ad9821235e500bf34e21da1de
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-6190f3593cf59d5663fb3224c4e43fbfe0f6e82f
       shell: sh
       env: 
         RUN_ID: ${{ cloudbees.run_id }}
@@ -98,6 +107,9 @@ runs:
           "password": "${{ inputs.password }}",
           "client_id": "${{ inputs.client-id }}",
           "client_secret": "${{ inputs.client-secret }}",
+          "validate_blackout_window_conflict": ${{ inputs.validate-blackout-window-conflict }},
+          "planned_start_date": "${{ inputs.planned-start-date }}",
+          "planned_end_date": "${{ inputs.planned-end-date }}",
           "params": {
             "number": "${{ inputs.cr-number }}",
             "requested_by": "${{ inputs.requested-by }}",
