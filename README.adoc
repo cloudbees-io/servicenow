@@ -236,7 +236,7 @@ The following is an example payload for creating a change request using OAuth-ba
 
 ----
 
-NOTE: Times specified in `planned-start-date` and `planned-end-date` fields are evaluated to be in the UTC time zone by default. If time zone is configured in SNOW Instance, then the fields are evaluated to be in the configured time zone.
+NOTE: Times specified in the `planned-start-date` and `planned-end-date` fields are evaluated to be in the UTC time zone by default. If the time zone is already configured in the ServiceNow instance, then the fields are evaluated to be in the ServiceNow-configured time zone.
 
 == Update or close a change request
 
