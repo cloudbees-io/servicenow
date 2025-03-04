@@ -464,7 +464,7 @@ The following is an example refering to output parameter sys_id from create  as 
           username: ${{ secrets.MY_SERVICENOW_USERNAME }}
           password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
           action-type: "update"
-          sys-id: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).sys_id }
+          sys-id: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).sys_id }}
           description: "Updated description from CBP workflow"
           priority: "3 - Moderate"
           risk: "Low"
@@ -507,7 +507,7 @@ The following is an example refering to output parameter sys_id from create  as 
           client-id: ${{ secrets.MY_CLIENT_ID }}
           client-secret: ${{ secrets.MY_CLIENT_SECRET }}
           action-type: "update"
-          sys-id: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).sys_id }
+          sys-id: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).sys_id }}
           state: "close"
           close-code: "successful"
           close-notes: "Change request closed in successful state"
@@ -643,7 +643,7 @@ The following is an example refering to output parameter sys_id from create  as 
           username: ${{ vars.MY_SERVICENOW_USERNAME }}
           password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
           action-type: "get"
-          cr-number: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).number }
+          cr-number: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).number }}
 
 ----
 
