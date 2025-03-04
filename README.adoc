@@ -630,7 +630,7 @@ The following is an example payload with basic authentication to get the current
 
 ----
 
-The following is an example refering to output parameter sys_id from create  as input in Get step:
+The following is an example refering to output parameter number from create  as input in Get step:
 
 [source,yaml,role="default-expanded"]
 ----
