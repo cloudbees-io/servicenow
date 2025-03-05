@@ -598,6 +598,10 @@ Outputs for Get change request functionality are listed below.
 | String
 | The current status of the change request.
 
+| `conflict_status`
+| String
+| The current conflict status of the planned dates.
+
 |===
 
 === Usage example: Getting the current state
