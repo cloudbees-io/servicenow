@@ -608,7 +608,8 @@ The following is an example payload with basic authentication to get the current
 ----
 
     steps:
-      - name: Get ServiceNow CR state with basic auth
+      - id: get
+        name: Get ServiceNow CR state with basic auth
         uses: cloudbees-io/service-now@v1
         with:
           url: ${{ vars.SERVICENOW_URL }}
@@ -625,14 +626,15 @@ The following is an example refering to output parameter number from create  as 
 ----
 
     steps:
-      - name: Get ServiceNow CR state with basic auth
+      - name: update ServiceNow CR with basic auth
         uses: cloudbees-io/service-now@v1
         with:
           url: ${{ vars.SERVICENOW_URL }}
           username: ${{ vars.MY_SERVICENOW_USERNAME }}
           password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
-          action-type: "get"
-          cr-number: ${{ fromJSON(steps.create_cr.outputs.servicenow_output).number }}
+          action-type: "update"
+          sys-id: ${{ fromJSON(steps.get.outputs.servicenow_output).sys_id }}
+          description: "Updated description from CBP workflow"
 
 ----
 
