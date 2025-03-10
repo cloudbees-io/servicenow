@@ -634,7 +634,7 @@ The following is an example payload referring to the output parameter `number` f
           username: ${{ vars.MY_SERVICENOW_USERNAME }}
           password: ${{ secrets.MY_SERVICENOW_PASSWORD }}
           action-type: "update"
-          sys-id: ${{ fromJSON(steps.get.outputs.servicenow_output).number }}
+          cr-number: ${{ fromJSON(steps.get.outputs.servicenow_output).number }}
           description: "Updated description from CBP workflow"
 
 ----
