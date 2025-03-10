@@ -74,7 +74,7 @@ Inputs for the create change request functionality are listed below.
 | `client-secret`
 | String
 | Required only for OAuth-based authentication.
-| The client secret for authentication.
+| The client secret used for authentication.
 
 | `short-description`
 | String
@@ -313,7 +313,7 @@ Inputs for the change request functionality are listed below.
 | `client-secret`
 | String
 | Required only for OAuth-based authentication.
-| The client secret for authentication.
+| The client secret used for authentication.
 
 | `action-type`
 | String
@@ -556,7 +556,7 @@ Inputs for the Get Change request functionality are listed below.
 | `client-secret`
 | String
 | Required only for OAuth-based authentication.
-| The client secret for authentication.
+| The client secret used for authentication.
 
 | `action-type`
 | String
