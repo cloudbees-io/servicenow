@@ -444,7 +444,7 @@ The following is an example payload for updating a change request using basic au
           additional-parameters : '{"risk_impact_analysis":"Describe the risks here","implementation_plan": "Describe the implementation plan here"}'
 ----
 
-The following is an example payload referring to the output parameter `sys_id` from the link:https://github.com/cloudbees-io/servicenow/blob/main/README.adoc#create-a-change-request[change request creation] step as input in the update step:
+The following is an example payload referring to the output parameter `sys_id` from the xref:README.adoc#create-a-change-request[change request creation] step as input in the update step:
 
 [source,yaml,role="default-expanded"]
 ----
@@ -485,7 +485,7 @@ The following is an example payload for closing a change request:
 
 ----
 
-The following is an example payload referring to the output parameter `sys_id` from the link:https://github.com/cloudbees-io/servicenow/blob/main/README.adoc#create-a-change-request[change request creation] step as input in the close step:
+The following is an example payload referring to the output parameter `sys_id` from the xref:README.adoc#create-a-change-request[change request creation] step as input in the close step:
 
 [source,yaml,role="default-expanded"]
 ----
@@ -507,7 +507,7 @@ The following is an example payload referring to the output parameter `sys_id` f
 [NOTE]
 ====
 
-For information about using input parameters in a manually triggered workflow, refer to the link:https://github.com/cloudbees-io/servicenow/blob/main/README.adoc#create-a-change-request[change request] usage examples.
+For information about using input parameters in a manually triggered workflow, refer to the xref:README.adoc#create-a-change-request[change request] usage examples.
 
 ====
 
@@ -621,14 +621,14 @@ The following is an example payload with basic authentication to get the current
 
 ----
 
-The following is an example payload referring to the output parameter `number` from the link:https://github.com/cloudbees-io/servicenow/blob/main/README.adoc#create-a-change-request[change request creation] step as input in the get step:
+The following is an example payload referring to the output parameter `number` from the xref:README.adoc#create-a-change-request[change request creation] step as input in the get step:
 
 [source,yaml,role="default-expanded"]
 ----
 
     steps:
-      - name: update ServiceNow CR with basic auth
-        uses: cloudbees-io/service-now@v1
+      - name: update ServiceNow CR with output parameter ref
+        uses: https://github.com/cloudbees-io/service-now@v1
         with:
           url: ${{ vars.SERVICENOW_URL }}
           username: ${{ vars.MY_SERVICENOW_USERNAME }}
