@@ -88,7 +88,8 @@ runs:
   steps:
     - id: invoke-servicenow-action
       name: invoke-servicenow-action
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-6190f3593cf59d5663fb3224c4e43fbfe0f6e82f
+      # latest image
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-550fe96718f00130eded3214a8a00e979dbd6d0f
       shell: sh
       env: 
         RUN_ID: ${{ cloudbees.run_id }}
@@ -97,10 +98,8 @@ runs:
         DNS_URL: ${{ cloudbees.api.url }}
         JWT_TOKEN: ${{ cloudbees.api.token }}
       run: |
-        set -x
-        cd /app
-        
-        ./servicenow -i '{
+        set -x        
+        /app/servicenow -i '{
           "action_type": "${{ inputs.action-type }}",
           "url": "${{ inputs.url }}",
           "username": "${{ inputs.username }}",
