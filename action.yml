@@ -89,7 +89,7 @@ runs:
     - id: invoke-servicenow-action
       name: invoke-servicenow-action
       # latest image
-      uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/servicenow-actions:main-9bddfea65087638cc5242e4a9e7dc9a1f22edd44
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/servicenow-actions:main-9bddfea65087638cc5242e4a9e7dc9a1f22edd44
       shell: sh
       env: 
         RUN_ID: ${{ cloudbees.run_id }}
